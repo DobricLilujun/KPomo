@@ -9,7 +9,7 @@
 SOURCE_DIR="/mnt/us/documents/kpomo-fancy"
 TARGET_DIR="/var/local/mesquite/kpomo-fancy"
 DB="/var/local/appreg.db"
-APP_ID="xyz.kurizu.kpomo-fancy"
+APP_ID="xyz.kurizu.kpomo"
 
 #Copy To VAR/LOCAL/MESQUITE
 if [ -d "$SOURCE_DIR" ]; then
@@ -31,19 +31,10 @@ INSERT OR REPLACE INTO properties(handlerId,name,value)
   VALUES('$APP_ID','lipcId','$APP_ID');
 INSERT OR REPLACE INTO properties(handlerId,name,value) 
   VALUES('$APP_ID','command','/usr/bin/mesquite -l $APP_ID -c file://$TARGET_DIR/');
-INSERT OR REPLACE INTO properties(handlerId,name,value) 
-  VALUES('$APP_ID','supportedOrientation','URL');
 EOF
 
 echo Registered $APP_ID, You May Now Launch It With LIPC.
 sleep 2
-
-# Keep the screen awake / disable the lock (screensaver) while KPomo runs.
-# Re-enable with: lipc-set-prop com.lab126.powerd preventScreenSaver 0
-lipc-set-prop com.lab126.powerd preventScreenSaver 1
-
-# Belt-and-suspenders fullscreen: hide the status/chrome bar (also set from the app).
-nohup lipc-set-prop com.lab126.chromebar configureChrome '{"appId":"'"$APP_ID"'","topNavBar":{"template":"blank"}}' >/dev/null 2>&1 &
 
 #Launch With LIPC
 nohup lipc-set-prop com.lab126.appmgrd start app://$APP_ID >/dev/null 2>&1 &
