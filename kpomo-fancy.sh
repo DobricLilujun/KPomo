@@ -6,10 +6,10 @@
 
 #Credit To HackerDude For OG Source (Modified A Bit For Stuffs)
 
-SOURCE_DIR="/mnt/us/documents/kpomo"
-TARGET_DIR="/var/local/mesquite/kpomo"
+SOURCE_DIR="/mnt/us/documents/kpomo-fancy"
+TARGET_DIR="/var/local/mesquite/kpomo-fancy"
 DB="/var/local/appreg.db"
-APP_ID="xyz.kurizu.kpomo"
+APP_ID="xyz.kurizu.kpomo-fancy"
 
 #Copy To VAR/LOCAL/MESQUITE
 if [ -d "$SOURCE_DIR" ]; then

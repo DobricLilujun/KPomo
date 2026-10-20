@@ -36,10 +36,10 @@ on e‑ink while still reading like a flip clock.
 
 1. Download the latest release from this repository (or build it yourself).
 2. Connect your Kindle to your computer via USB.
-3. Copy the entire `kpomo` folder and `kpomo.sh` file into the **Documents** folder
+3. Copy the entire `kpomo-fancy` folder and `kpomo-fancy.sh` file into the **Documents** folder
    of your Kindle.
 4. Safely eject your Kindle.
-5. Run `kpomo.sh` (jailbroken Kindle) — this registers the app, hides the chrome bar,
+5. Run `kpomo-fancy.sh` (jailbroken Kindle) — this registers the app, hides the chrome bar,
    allows both orientations **and** keeps the screen awake.
 6. On the device open the **Kpomo-fancy** booklet to start the timer.
 
@@ -57,24 +57,23 @@ Kindles only play Audible natively, and a WebKit `Audio` element is often silent
 the end‑of‑session cue is **primarily visual** (screen flash + full‑screen message) and always
 reliable. The gentle chime (`sounds/chime.ogg`) plays on devices/WebKit that support audio.
 On a jailbroken Kindle with a speaker, audio can also be routed through the system
-(`aplay /var/local/mesquite/kpomo/sounds/chime.wav`) if you wire a shell trigger.
+(`aplay /var/local/mesquite/kpomo-fancy/sounds/chime.wav`) if you wire a shell trigger.
 
 ## Fullscreen, orientation & keeping the screen awake
 
-- **Fullscreen**: `kpomo.sh` and the app both set the chrome bar to `blank`
+- **Fullscreen**: `kpomo-fancy.sh` and the app both set the chrome bar to `blank`
   (`configureChrome ... topNavBar:{template:"blank"}`), so the timer fills the screen.
 - **Landscape & portrait**: the installer sets `supportedOrientation` to `URL` (both
   orientations), and the CSS is orientation-aware (tiles are sized off the smaller screen
   dimension, with a landscape media query that tightens spacing).
-- **No screensaver/lock**: `kpomo.sh` runs `lipc-set-prop com.lab126.powerd preventScreenSaver 1`.
+- **No screensaver/lock**: `kpomo-fancy.sh` runs `lipc-set-prop com.lab126.powerd preventScreenSaver 1`.
   To restore the screensaver later: `lipc-set-prop com.lab126.powerd preventScreenSaver 0`.
   (On firmware ≥ 5.14.2 the old `~ds` trick is gone; you can also drop an empty
   `TESTD_PREVENT_SCREENSAVER` file in the Kindle root.)
 
 ## Development
 
-The code lives entirely in the `kpomo` directory. Modify `main.js` for logic,
+The code lives entirely in the `kpomo-fancy` directory. Modify `main.js` for logic,
 `main.css` for styling and `index.html` for structure. The `config.xml` file makes
-Kindle aware of the booklet and configures the chrome bar. The technical app ID
-(`xyz.kurizu.kpomo`) and folder name stay as `kpomo` for the installer; only the
-display name is `Kpomo-fancy`.
+Kindle aware of the booklet and configures the chrome bar. The app ID is
+`xyz.kurizu.kpomo-fancy`.
