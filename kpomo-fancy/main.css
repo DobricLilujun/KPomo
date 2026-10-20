@@ -28,38 +28,40 @@ body {
 #session-label.break { color: #0a7d3c; }
 #session-label.work  { color: #111; }
 
-/* ---- Flip clock: tiles sit on one centered line ---- */
+/* ---- Flip clock: table layout = bulletproof row + centering on old WebKit ----
+   display:table / table-cell is CSS 2.1; a table with margin:0 auto centers
+   reliably (inline-block + text-align:center is mishandled by Kindle WebKit). */
 #clock {
-  white-space: nowrap;
-  text-align: center;
+  display: table;
+  margin: 0 auto;
+  border-collapse: separate;
 }
 
-/* Each digit is a flip-card tile: dark rounded square.
-   Vertical text centering is done with line-height == height (old-school, no flex). */
+/* Each digit is a flip-card tile: dark rounded square. */
 .tile {
-  display: inline-block;
-  vertical-align: middle;
+  display: table-cell;
   width: 130px;
   height: 130px;
-  margin: 0 6px;
   background: #1b1b1b;
   color: #ffffff;
   border-radius: 16px;
   text-align: center;
+  vertical-align: middle;
   font-size: 72px;
   font-weight: 400;
-  line-height: 130px;
+  line-height: 1;
 }
 
 /* the colon between minute and second groups */
 .colon {
-  display: inline-block;
-  vertical-align: middle;
+  display: table-cell;
   width: 40px;
   font-size: 72px;
   font-weight: 700;
   color: #1b1b1b;
-  line-height: 130px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 1;
 }
 
 /* ---- Progress bar (thin, line style = e-ink safe) ---- */
@@ -84,7 +86,6 @@ body {
 }
 #controls button {
   display: inline-block;
-  vertical-align: middle;
   font-size: 18px;
   padding: 12px 22px;
   margin: 0 8px;
@@ -108,7 +109,6 @@ body {
 }
 #settings .setting {
   display: inline-block;
-  vertical-align: middle;
   text-align: center;
   margin: 0 18px;
 }
@@ -122,7 +122,6 @@ body {
 }
 #settings .setting-input button {
   display: inline-block;
-  vertical-align: middle;
   width: 30px;
   height: 30px;
   line-height: 30px;
@@ -135,7 +134,6 @@ body {
 }
 #settings input[type="number"] {
   display: inline-block;
-  vertical-align: middle;
   width: 48px;
   height: 30px;
   text-align: center;
