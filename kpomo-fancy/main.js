@@ -1,21 +1,26 @@
 /* KPomo — Pomodoro for Kindle (flip-clock UI)
-   Kept lean: no heavy libraries, e-ink friendly. */
+   Kept lean: no heavy libraries, e-ink friendly.
+   Written for Kindle's old WebKit: no classList, no getElementsByClassName,
+   no flex in JS. Tiles are cached as references; settings hidden via inline style. */
 
 var timer = null;
 var remaining = 0;       // seconds left in current session
 var sessionTotal = 0;    // full length of current session
 var inBreak = false;     // false = work, true = break
 var chime = null;        // lazy Audio handle
+var tiles = [];         // the four digit tiles, cached at build time
 
-// Build the flip-clock tiles once.
+// Build the flip-clock tiles once: MM : SS  (4 tiles + 1 colon).
 function buildClock() {
   var clock = document.getElementById('clock');
-  if (!clock || clock.childElementCount) return;
+  if (!clock || clock.childNodes.length > 0) return;
+
   function tile() {
     var d = document.createElement('div');
     d.className = 'tile';
     d.textContent = '0';
     clock.appendChild(d);
+    return d;
   }
   function colon() {
     var c = document.createElement('div');
@@ -23,9 +28,12 @@ function buildClock() {
     c.textContent = ':';
     clock.appendChild(c);
   }
-  tile(); tile();        // MM
+
+  tiles.push(tile());   // tens of minutes
+  tiles.push(tile());   // ones of minutes
   colon();
-  tile(); tile();        // SS
+  tiles.push(tile());   // tens of seconds
+  tiles.push(tile());   // ones of seconds
 }
 
 function currentMinutes() {
@@ -37,7 +45,8 @@ function updateDisplay() {
   var secs = remaining > 0 ? remaining : currentMinutes() * 60;
   var mins = Math.floor(secs / 60);
   var s = secs % 60;
-  var tiles = document.getElementById('clock').getElementsByClassName('tile');
+
+  // tiles: [tens-min, ones-min, tens-sec, ones-sec]
   tiles[0].textContent = Math.floor(mins / 10);
   tiles[1].textContent = mins % 10;
   tiles[2].textContent = Math.floor(s / 10);
@@ -57,7 +66,8 @@ function onPageLoad() {
 }
 
 function setRunning(run) {
-  document.body.classList.toggle('running', run);
+  // Hide/show settings by inline style (no CSS class / classList needed).
+  document.getElementById('settings').style.display = run ? 'none' : 'block';
   document.getElementById('start-button').disabled = run;
   document.getElementById('pause-button').disabled = !run;
   document.getElementById('reset-button').disabled = !run;
@@ -136,7 +146,7 @@ function sessionComplete() {
   if (a) { try { a.load(); a.play(); } catch (e) {} }
 
   // E-ink flash fallback so the cue is unmistakable even when silent.
-  if (typeof flashDisplay === 'function') flashDisplay();
+  if (typeof flashDisplay === 'function') { try { flashDisplay(); } catch (e) {} }
 
   // Auto-advance to the next session (forced break after work).
   inBreak = !inBreak;
@@ -144,7 +154,7 @@ function sessionComplete() {
   sessionTotal = 0;
   updateDisplay();
 
-  // Full-screen message.
+  // Full-screen message (block, not flex — max compatibility).
   var cue = document.getElementById('cue');
   var msg = document.getElementById('cue-message');
   var sub = document.getElementById('cue-sub');
@@ -155,6 +165,6 @@ function sessionComplete() {
     msg.textContent = 'Back to focus';
     sub.textContent = 'Start when ready';
   }
-  cue.style.display = 'flex';
+  cue.style.display = 'block';
   setTimeout(function () { cue.style.display = 'none'; }, 4000);
 }
