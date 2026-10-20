@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <widget id="xyz.kurizu.kpomo" version="1.0" viewmodes="application" xmlns="http://www.w3.org/ns/widgets"
     xmlns:kindle="http://kindle.amazon.com/ns/widget-extensions">
-    <name xml:lang="en">KPomo</name>
-    <description xml:lang="en">KPomo</description>
+    <name xml:lang="en">Kpomo-fancy</name>
+    <description xml:lang="en">Kpomo-fancy</description>
 
     <content src="index.html" />
 

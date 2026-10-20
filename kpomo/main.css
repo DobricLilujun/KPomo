@@ -1,138 +1,202 @@
-/* Basic Kindle friendly styling */
+/* KPomo — flip-clock aesthetic, e-ink friendly, orientation-aware.
+   No CSS animation/transition (e-ink is slow + ghosts).
+   No drop-shadows (ghosting on e-ink). Large digits (>= 28px).
+   Tiles are sized off the smaller dimension so they fit both portrait
+   and landscape; a landscape media query tightens vertical spacing. */
+
+:root {
+  --tile: min(15vw, 17vh);   /* square tile, capped by the smaller axis */
+  --tile-max: 150px;
+}
+
+html, body { height: 100%; margin: 0; padding: 0; }
+
 body {
-  font-family: sans-serif;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  background: #fff;
-  color: #000;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background: #ffffff;
+  color: #111111;
+  -webkit-user-select: none;
+  user-select: none;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-}
-
-#main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  transform: translateY(-5%);
+  overflow: hidden;
 }
 
-h1 {
-  margin-top: 1rem;
-  font-size: 1.5rem;
-}
-
-#timer-container {
-  margin: 2rem auto;
-  width: 90%;
-}
-
-#time-display {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-#session-label {
-  font-size: 1.2rem;
-  margin-bottom: 0.4rem;
-  font-weight: bold;
-}
-
-#progress-bar {
-  width: 80%;
-  height: 6px;
-  border: 1px solid #000;
-  margin: 0.5rem auto 1rem auto;
-  background: #fff;
-}
-
-#progress-fill {
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   height: 100%;
-  width: 0%;
-  background: #000;
+  box-sizing: border-box;
+  padding: 2vh 3vw;
 }
 
-#controls button {
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  margin: 0 0.5rem;
-  border: 1px solid #000;
-  background: #fff;
+/* ---- Session label ---- */
+#session-label {
+  font-size: clamp(1rem, 4.5vh, 1.6rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 2vh;
 }
+#session-label.break { color: #0a7d3c; }
+#session-label.work  { color: #111; }
 
-#controls button:disabled {
-  color: #999;
-  border-color: #999;
-}
-
-body.running #settings {
-  display: none;
-}
-
-#settings {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-}
-
-#settings .setting {
-  display: inline-block;
-  margin: 0 0.5rem;
-  text-align: center;
-}
-#settings .setting-label {
-  margin-bottom: 0.2rem;
-  font-weight: bold;
-}
-#settings .setting-input {
+/* ---- Flip clock ---- */
+#clock {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1vh;
+}
+
+/* Each digit is a flip-card tile: dark rounded square with a center seam. */
+.tile {
+  position: relative;
+  width: var(--tile);
+  height: var(--tile);
+  max-width: var(--tile-max);
+  max-height: var(--tile-max);
+  background: #1b1b1b;
+  color: #ffffff;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: min(7vw, 8vh);
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* the seam across the middle of a real flip card */
+.tile::after {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 50%;
+  height: 2px;
+  background: #000;
+  transform: translateY(-1px);
+}
+
+/* the colon between minute and second groups */
+.colon {
+  font-size: min(7vw, 8vh);
+  font-weight: 700;
+  color: #1b1b1b;
+  padding: 0 0.4vw;
+}
+
+/* ---- Progress bar (thin, line style = e-ink safe) ---- */
+#progress-bar {
+  width: 70%;
+  height: 4px;
+  background: #e2e2e2;
+  margin: 2.5vh auto 0 auto;
+  border-radius: 2px;
+  overflow: hidden;
+}
+#progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #1b1b1b;
+}
+
+/* ---- Controls ---- */
+#controls {
+  display: flex;
+  gap: 1.2vw;
+  margin-top: 3vh;
+}
+#controls button {
+  font-size: 1.1rem;
+  padding: 0.7rem 1.5rem;
+  border: 2px solid #1b1b1b;
+  background: #fff;
+  color: #111;
+  border-radius: 12px;
+  cursor: pointer;
+  min-width: 5rem;
+}
+#controls button:disabled {
+  color: #aaa;
+  border-color: #ccc;
+}
+#start-button { background: #1b1b1b; color: #fff; }
+
+/* ---- Settings (hidden while running) ---- */
+#settings {
+  margin-top: 2.5vh;
+  display: flex;
+  gap: 3vw;
+  font-size: 0.9rem;
+}
+#settings .setting { text-align: center; }
+#settings .setting-label {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.3rem;
+}
+#settings .setting-input { display: flex; align-items: center; justify-content: center; }
+#settings .setting-input button {
+  width: 1.8rem;
+  height: 1.8rem;
+  font-size: 1rem;
+  padding: 0;
+  border: 2px solid #1b1b1b;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
 }
 #settings input[type="number"] {
   width: 3rem;
   text-align: center;
   font-size: 1rem;
-  margin: 0 0.2rem;
+  border: 1px solid #bbb;
+  margin: 0 0.3rem;
+  -moz-appearance: textfield;
 }
-
 input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+body.running #settings { display: none; }
+
+/* ---- End-of-session cue (full-screen flash + message) ---- */
+#cue {
+  position: fixed;
+  inset: 0;
+  background: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6vw;
+}
+#cue-message {
+  font-size: clamp(2rem, 10vh, 4.5rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+#cue-sub {
+  font-size: clamp(1rem, 4vh, 1.6rem);
+  color: #bbb;
+  margin-top: 2vh;
+  letter-spacing: 0.2em;
 }
 
-#settings button {
-  width: 1.5rem;
-  height: 1.5rem;
-  font-size: 1rem;
-  padding: 0;
-}
-#settings .unit {
-  margin-left: 0.2rem;
-}
-
-.modal, .footer {
-  font-size: 0.7rem;
-  color: #666;
-}
-
-.footer {
-  position: absolute;
-  bottom: 0.5rem;
-  width: 100%;
-}
-
-/* message box for notifications */
-#message {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #fff;
-  border: 1px solid #000;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  display: none;
+/* ---- Landscape: tighten vertical spacing so everything fits the short axis ---- */
+@media (orientation: landscape) {
+  :root { --tile-max: 130px; }
+  #session-label { margin-bottom: 1vh; }
+  #clock { gap: 0.6vw; }
+  #progress-bar { margin: 1.5vh auto 0 auto; }
+  #controls { margin-top: 1.8vh; }
+  #settings { margin-top: 1.5vh; }
+  #controls button { padding: 0.5rem 1.2rem; }
 }

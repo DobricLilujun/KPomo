@@ -5,41 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta charset="utf-8">
   <script src="js/polyfill.min.js"></script>
+  <script src="js/sdk.js"></script>
   <script src="main.js"></script>
   <link href="main.css" rel="stylesheet">
-  <title>KPomo</title>
+  <title>Kpomo-fancy</title>
+
+  <!-- Fullscreen: hide the chrome/status bar. "blank" template removes the bar. -->
   <script>
-    function update() {
+    function setChrome() {
       var chromebar = {
         "appId": "xyz.kurizu.kpomo",
-        "topNavBar": {
-          "template": "title",
-          "title": "KPomo",
-          "buttons": [
-            {
-              "id": "KPP_MORE",
-              "state": "enabled",
-              "handling": "system"
-            },
-            {
-              "id": "KPP_CLOSE",
-              "state": "enabled",
-              "handling": "system"
-            }
-          ],
-        },
+        "topNavBar": { "template": "blank" },
         "systemMenu": {
           "clientParams": {
             "profile": {
               "name": "default",
               "items": [
-                {
-                  "id": "KPOMO_RELOAD",
-                  "state": "enabled",
-                  "handling": "notifyApp",
-                  "label": "Reload",
-                  "position": 0
-                }
+                { "id": "KPOMO_RELOAD", "state": "enabled", "handling": "notifyApp", "label": "Reload", "position": 0 }
               ],
               "selectionMode": "none",
               "closeOnUse": true
@@ -47,58 +29,61 @@
           }
         }
       };
-      window.kindle.messaging.sendMessage("com.lab126.chromebar", "configureChrome", chromebar);
-    };
+      try { window.kindle.messaging.sendMessage("com.lab126.chromebar", "configureChrome", chromebar); } catch (e) {}
+    }
 
-    window.kindle.appmgr.ongo = function (ctx) {
-      update();
-      window.kindle.messaging.receiveMessage("systemMenuItemSelected", function (type, id) {
-        switch (id) {
-          case "KPOMO_RELOAD":
-            window.location.reload();
-        };
-      });
-    };
+    if (window.kindle && window.kindle.appmgr) {
+      window.kindle.appmgr.ongo = function (ctx) {
+        setChrome();
+        try {
+          window.kindle.messaging.receiveMessage("systemMenuItemSelected", function (type, id) {
+            if (id === "KPOMO_RELOAD") window.location.reload();
+          });
+        } catch (e) {}
+      };
+    }
   </script>
 </head>
 
 <body onload="onPageLoad()">
-  <h1>KPomo</h1>
-  <div id="main-content">
-    <div id="timer-container">
-    <div id="session-label">Work</div>
-    <div id="time-display">25:00</div>
+  <div id="app">
+    <div id="session-label">Focus</div>
+
+    <!-- Flip-clock tiles: each shows one digit. Built in JS. -->
+    <div id="clock" aria-live="polite"></div>
+
     <div id="progress-bar"><div id="progress-fill"></div></div>
+
     <div id="controls">
       <button id="start-button" onclick="startTimer()">Start</button>
       <button id="pause-button" onclick="pauseTimer()" disabled>Pause</button>
       <button id="reset-button" onclick="resetTimer()" disabled>Reset</button>
     </div>
-    <div id="message" class="message" style="display:none;"></div>
-  </div>
+
     <div id="settings">
       <div class="setting">
-        <div class="setting-label">Work</div>
+        <div class="setting-label">Focus</div>
         <div class="setting-input">
-          <button onclick="changeDuration('work', -1)">-</button>
+          <button onclick="changeDuration('work', -1)">&minus;</button>
           <input type="number" id="work-duration" value="25" min="1" />
           <button onclick="changeDuration('work', 1)">+</button>
-          <span class="unit">m</span>
         </div>
       </div>
       <div class="setting">
         <div class="setting-label">Break</div>
         <div class="setting-input">
-          <button onclick="changeDuration('break', -1)">-</button>
+          <button onclick="changeDuration('break', -1)">&minus;</button>
           <input type="number" id="break-duration" value="5" min="1" />
           <button onclick="changeDuration('break', 1)">+</button>
-          <span class="unit">m</span>
         </div>
       </div>
     </div>
   </div>
-  <div class="footer">
-    <p>KPomo – Pomodoro for Kindle</p>
+
+  <!-- End-of-session cue overlay (flash + message + next action) -->
+  <div id="cue" style="display:none;">
+    <div id="cue-message">Break time</div>
+    <div id="cue-sub">Time to move</div>
   </div>
 </body>
 
