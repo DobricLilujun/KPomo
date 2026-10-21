@@ -7,7 +7,6 @@ var timer = null;
 var remaining = 0;       // seconds left in current session
 var sessionTotal = 0;    // full length of current session
 var inBreak = false;     // false = work, true = break
-var chime = null;        // lazy Audio handle
 var tiles = [];         // the four digit tiles, cached at build time
 
 // Build the flip-clock tiles once: MM : SS  (4 tiles + 1 colon).
@@ -124,16 +123,7 @@ function tick() {
   }
 }
 
-// ---- End-of-session cue: soft sound + screen flash + message ----
-function loadChime() {
-  if (chime) return chime;
-  try {
-    chime = new Audio('sounds/chime.ogg');
-    chime.volume = 0.5;
-  } catch (e) { chime = null; }
-  return chime;
-}
-
+// ---- End-of-session cue: VISUAL only (no audio) — e-ink flash + full-screen message ----
 function sessionComplete() {
   clearInterval(timer);
   timer = null;
@@ -141,14 +131,11 @@ function sessionComplete() {
   document.getElementById('work-duration').disabled = false;
   document.getElementById('break-duration').disabled = false;
 
-  // Gentle sound (best effort; may be silent on Kindle WebKit).
-  var a = loadChime();
-  if (a) { try { a.load(); a.play(); } catch (e) {} }
-
-  // E-ink flash fallback so the cue is unmistakable even when silent.
+  // Visual alert only (no audio): e-ink flash + full-screen message.
   if (typeof flashDisplay === 'function') { try { flashDisplay(); } catch (e) {} }
 
-  // Auto-advance to the next session (forced break after work).
+  // Pre-switch the mode label (work<->break) so the next manual Start runs the
+  // correct session. NO auto-start: nothing runs until the user presses Start.
   inBreak = !inBreak;
   remaining = 0;
   sessionTotal = 0;

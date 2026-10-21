@@ -19,7 +19,7 @@ body {
 
 /* ---- Session label ---- */
 #session-label {
-  font-size: 26px;
+  font-size: 30px;
   letter-spacing: 10px;
   text-transform: uppercase;
   color: #555;
@@ -40,24 +40,25 @@ body {
 /* Each digit is a flip-card tile: dark rounded square. */
 .tile {
   display: table-cell;
-  width: 130px;
-  height: 130px;
-  background: #1b1b1b;
-  color: #ffffff;
-  border-radius: 16px;
+  width: 175px;
+  height: 175px;
+  background: #ffffff;
+  color: #000000;
+  border: 3px solid #1b1b1b;
+  border-radius: 18px;
   text-align: center;
   vertical-align: middle;
-  font-size: 72px;
-  font-weight: 400;
+  font-size: 110px;
+  font-weight: 900;
   line-height: 1;
 }
 
 /* the colon between minute and second groups */
 .colon {
   display: table-cell;
-  width: 40px;
-  font-size: 72px;
-  font-weight: 700;
+  width: 46px;
+  font-size: 100px;
+  font-weight: 900;
   color: #1b1b1b;
   text-align: center;
   vertical-align: middle;
@@ -86,8 +87,9 @@ body {
 }
 #controls button {
   display: inline-block;
-  font-size: 18px;
-  padding: 12px 22px;
+  font-size: 24px;
+  font-weight: 700;
+  padding: 16px 30px;
   margin: 0 8px;
   border: 2px solid #1b1b1b;
   background: #fff;
@@ -122,22 +124,24 @@ body {
 }
 #settings .setting-input button {
   display: inline-block;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  font-size: 18px;
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 24px;
+  font-weight: 700;
   padding: 0;
   border: 2px solid #1b1b1b;
   background: #fff;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
 }
 #settings input[type="number"] {
   display: inline-block;
-  width: 48px;
-  height: 30px;
+  width: 64px;
+  height: 44px;
   text-align: center;
-  font-size: 16px;
+  font-size: 22px;
+  font-weight: 700;
   border: 1px solid #bbb;
   margin: 0 8px;
 }
@@ -168,12 +172,14 @@ body {
 
 /* ---- Landscape: smaller so the vertical stack fits the short axis ---- */
 @media (orientation: landscape) {
-  .tile { width: 96px; height: 96px; font-size: 52px; line-height: 96px; }
-  .colon { font-size: 52px; line-height: 96px; }
+  .tile { width: 118px; height: 118px; font-size: 78px; line-height: 118px; }
+  .colon { font-size: 78px; line-height: 118px; }
   #session-label { margin-bottom: 18px; }
   #progress-bar { margin-top: 18px; }
   #controls { margin-top: 20px; }
-  #controls button { padding: 8px 16px; }
+  #controls button { padding: 12px 24px; font-size: 20px; }
   #settings { margin-top: 18px; }
+  #settings .setting-input button { width: 38px; height: 38px; line-height: 38px; font-size: 20px; }
+  #settings input[type="number"] { width: 56px; height: 38px; font-size: 18px; }
   #cue-message { font-size: 44px; }
 }
