@@ -1,7 +1,9 @@
-/* Kpomo-fancy — flip-clock, e-ink friendly, MAXIMALLY Kindle-WebKit compatible.
-   No flexbox, no :root/var, no min/clamp/inset, no ::after, no transforms.
-   Centering = text-align:center + inline-block; tile text centered via line-height.
-   These are CSS 2.1 features that work on Kindle's old WebKit (PW5 and older). */
+/* Kpomo-fancy — split-flap flip clock for Kindle e-ink.
+   Design: white flip CARDS with a horizontal hinge line (the split-flap seam),
+   square-dot colon, poster wordmark, black primary Start button.
+   Constraints kept: no flexbox, no var(), no transforms, no shadows,
+   no gradients, no animations — CSS 2.1 + position:absolute only.
+   Centering = display:table + margin:0 auto (Kindle-WebKit proof). */
 
 html, body { height: 100%; margin: 0; padding: 0; }
 
@@ -13,65 +15,95 @@ body {
 }
 
 #app {
-  padding-top: 9%;
+  padding-top: 6%;
   text-align: center;
+}
+
+/* ---- Poster wordmark: K P O M O ---- */
+#brand {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 16px;
+  text-transform: uppercase;
+  color: #111;
+  margin: 0 0 10px 0;
+}
+#brand-rule {
+  display: table;
+  width: 140px;
+  margin: 0 auto 26px auto;
+  border-top: 3px solid #1b1b1b;
 }
 
 /* ---- Session label ---- */
 #session-label {
-  font-size: 30px;
-  letter-spacing: 10px;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 12px;
   text-transform: uppercase;
-  color: #555;
-  margin-bottom: 34px;
+  margin-bottom: 30px;
 }
 #session-label.break { color: #0a7d3c; }
 #session-label.work  { color: #111; }
 
-/* ---- Flip clock: table layout = bulletproof row + centering on old WebKit ----
-   display:table / table-cell is CSS 2.1; a table with margin:0 auto centers
-   reliably (inline-block + text-align:center is mishandled by Kindle WebKit). */
+/* ---- Flip clock: table layout = bulletproof row + centering ---- */
 #clock {
   display: table;
   margin: 0 auto;
   border-collapse: separate;
 }
 
-/* Each digit is a flip-card tile: dark rounded square. */
+/* Flip CARD: white tile, heavy border, the hinge seam across the middle.
+   The card holds two children: .tile-num (the digit) and .hinge (the seam). */
 .tile {
   display: table-cell;
+  position: relative;
   width: 175px;
   height: 175px;
   background: #ffffff;
-  color: #000000;
   border: 3px solid #1b1b1b;
-  border-radius: 18px;
+  border-radius: 16px;
   text-align: center;
   vertical-align: middle;
-  font-size: 110px;
+}
+.tile-num {
+  font-size: 104px;
   font-weight: 900;
-  line-height: 1;
+  line-height: 175px;
+  color: #000000;
+}
+.hinge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 3px solid #1b1b1b;
 }
 
-/* the colon between minute and second groups */
+/* Colon = two SQUARE dots stacked (classic flip-clock separator). */
 .colon {
   display: table-cell;
-  width: 46px;
-  font-size: 100px;
-  font-weight: 900;
-  color: #1b1b1b;
+  width: 44px;
+  height: 175px;
   text-align: center;
   vertical-align: middle;
-  line-height: 1;
 }
+.dot {
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  background: #1b1b1b;
+}
+.dot2 { margin-top: 54px; }
 
-/* ---- Progress bar (thin, line style = e-ink safe) ---- */
+/* ---- Progress gauge: bordered track, solid black fill ---- */
 #progress-bar {
   width: 70%;
-  height: 4px;
-  background: #e2e2e2;
-  margin: 34px auto 0 auto;
-  border-radius: 2px;
+  height: 10px;
+  background: #ffffff;
+  border: 2px solid #1b1b1b;
+  margin: 36px auto 0 auto;
   overflow: hidden;
 }
 #progress-fill {
@@ -80,44 +112,50 @@ body {
   background: #1b1b1b;
 }
 
-/* ---- Controls: centered inline buttons ---- */
+/* ---- Controls: black primary Start, outlined secondaries ---- */
 #controls {
-  margin-top: 40px;
+  margin-top: 42px;
   text-align: center;
 }
 #controls button {
   display: inline-block;
   font-size: 24px;
   font-weight: 700;
-  padding: 16px 30px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 18px 34px;
   margin: 0 8px;
-  border: 2px solid #1b1b1b;
+  border: 3px solid #1b1b1b;
   background: #fff;
   color: #111;
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
 }
 #controls button:disabled {
   color: #aaa;
   border-color: #ccc;
 }
-#start-button { background: #1b1b1b; color: #fff; }
+#start-button { background: #1b1b1b; color: #fff; padding: 18px 46px; }
 
-/* ---- Settings (hidden while running) ---- */
+/* ---- Settings: two outlined cards ---- */
 #settings {
-  margin-top: 34px;
+  margin-top: 40px;
   text-align: center;
   font-size: 15px;
 }
 #settings .setting {
   display: inline-block;
   text-align: center;
-  margin: 0 18px;
+  margin: 0 10px;
+  padding: 14px 22px;
+  border: 2px solid #1b1b1b;
+  border-radius: 16px;
 }
 #settings .setting-label {
   font-weight: 700;
-  letter-spacing: 3px;
-  margin-bottom: 6px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
 #settings .setting-input {
   white-space: nowrap;
@@ -142,11 +180,12 @@ body {
   text-align: center;
   font-size: 22px;
   font-weight: 700;
-  border: 1px solid #bbb;
+  border: 2px solid #1b1b1b;
+  border-radius: 10px;
   margin: 0 8px;
 }
 
-/* ---- End-of-session cue (full-screen flash + message) ---- */
+/* ---- End-of-session cue: black poster with rule lines ---- */
 #cue {
   position: absolute;
   top: 0;
@@ -156,30 +195,45 @@ body {
   background: #111;
   color: #fff;
   text-align: center;
-  padding-top: 30%;
+  padding-top: 28%;
 }
 #cue-message {
-  font-size: 64px;
-  font-weight: 700;
-  letter-spacing: 3px;
+  font-size: 68px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  text-transform: uppercase;
 }
 #cue-sub {
-  font-size: 24px;
-  color: #bbb;
-  margin-top: 20px;
-  letter-spacing: 8px;
+  font-size: 22px;
+  color: #cccccc;
+  margin-top: 22px;
+  letter-spacing: 10px;
+  text-transform: uppercase;
+}
+.cue-rule {
+  display: table;
+  width: 34%;
+  margin: 30px auto;
+  border-top: 3px solid #ffffff;
 }
 
-/* ---- Landscape: smaller so the vertical stack fits the short axis ---- */
+/* ---- Landscape: smaller stack so everything fits the short axis ---- */
 @media (orientation: landscape) {
-  .tile { width: 118px; height: 118px; font-size: 78px; line-height: 118px; }
-  .colon { font-size: 78px; line-height: 118px; }
-  #session-label { margin-bottom: 18px; }
-  #progress-bar { margin-top: 18px; }
-  #controls { margin-top: 20px; }
+  #app { padding-top: 4%; }
+  .tile { width: 118px; height: 118px; }
+  .tile-num { font-size: 72px; line-height: 118px; }
+  .colon { height: 118px; width: 34px; }
+  .dot { width: 16px; height: 16px; }
+  .dot2 { margin-top: 36px; }
+  #session-label { font-size: 26px; margin-bottom: 16px; }
+  #brand-rule { margin-bottom: 14px; }
+  #progress-bar { margin-top: 20px; }
+  #controls { margin-top: 24px; }
   #controls button { padding: 12px 24px; font-size: 20px; }
-  #settings { margin-top: 18px; }
+  #settings { margin-top: 20px; }
+  #settings .setting { padding: 8px 16px; }
   #settings .setting-input button { width: 38px; height: 38px; line-height: 38px; font-size: 20px; }
   #settings input[type="number"] { width: 56px; height: 38px; font-size: 18px; }
-  #cue-message { font-size: 44px; }
+  #cue { padding-top: 22%; }
+  #cue-message { font-size: 48px; }
 }

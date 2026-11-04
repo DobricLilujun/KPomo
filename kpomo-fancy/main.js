@@ -17,14 +17,23 @@ function buildClock() {
   function tile() {
     var d = document.createElement('div');
     d.className = 'tile';
-    d.textContent = '0';
+    var num = document.createElement('div');   // the digit
+    num.className = 'tile-num';
+    num.textContent = '0';
+    d.appendChild(num);
+    var hinge = document.createElement('div'); // the split-flap hinge line
+    hinge.className = 'hinge';
+    d.appendChild(hinge);
     clock.appendChild(d);
-    return d;
+    return num;                                 // updateDisplay writes to tile-num
   }
   function colon() {
     var c = document.createElement('div');
     c.className = 'colon';
-    c.textContent = ':';
+    var d1 = document.createElement('div'); d1.className = 'dot';
+    var d2 = document.createElement('div'); d2.className = 'dot dot2';
+    c.appendChild(d1);
+    c.appendChild(d2);
     clock.appendChild(c);
   }
 

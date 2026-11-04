@@ -6,8 +6,8 @@
   <meta charset="utf-8">
   <script src="js/polyfill.min.js"></script>
   <script src="js/sdk.js"></script>
-  <script src="main.js?v=5"></script>
-  <link href="main.css?v=5" rel="stylesheet">
+  <script src="main.js?v=6"></script>
+  <link href="main.css?v=6" rel="stylesheet">
   <title>Kpomo-fancy</title>
 
   <!-- Fullscreen: hide the chrome/status bar. "blank" template removes the bar. -->
@@ -47,6 +47,8 @@
 
 <body onload="onPageLoad()">
   <div id="app">
+    <div id="brand">KPOMO</div>
+    <div id="brand-rule"></div>
     <div id="session-label">Focus</div>
 
     <!-- Flip-clock tiles: each shows one digit. Built in JS. -->
@@ -82,8 +84,10 @@
 
   <!-- End-of-session cue overlay (flash + message + next action) -->
   <div id="cue" style="display:none;">
+    <div class="cue-rule"></div>
     <div id="cue-message">Break time</div>
-    <div id="cue-sub">Time to move</div>
+    <div id="cue-sub">Press start to begin</div>
+    <div class="cue-rule"></div>
   </div>
 </body>
 
