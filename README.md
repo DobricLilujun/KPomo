@@ -1,79 +1,92 @@
 # Kpomo-fancy
-<img width="auto" height="600" alt="image" src="https://github.com/user-attachments/assets/0422d226-58ab-48d8-ae23-8f1d3766347a" />
-<br /><br />
+
+**A split-flap flip-clock Pomodoro timer for Kindle.**
+
+<p align="center">
+  <img src="preview/2-running-portrait.png" width="300" alt="Kpomo-fancy running (portrait)" />
+  <img src="preview/3-running-landscape.png" width="420" alt="Kpomo-fancy running (landscape)" />
+</p>
+
+> **If you find Kpomo-fancy useful, please give it a ⭐ star!**
+> Stars help other Kindle tinkerers discover this project — and they're free.
+> Bookmark the repo, share it in the [KindleModding Discord](https://discord.kindlemodding.org),
+> or [buy me a coffee](https://ko-fi.com/kurizu) if it made you more productive. Thanks! 🙏
+
 <a href="https://ko-fi.com/kurizu" target="_blank">
-   <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" />
+  <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" />
 </a>
-<br /><br />
-Kpomo-fancy is a stylish Pomodoro focus timer designed for Kindles.
 
 ## Overview
 
-- 25‑minute work sessions followed by 5‑minute short breaks (configurable in the UI)
-- Start, pause, reset controls
-- **Flip‑clock display** — large digit tiles that look like a split‑flap clock, tuned for
-  Kindle's e‑ink screen (no heavy animation, no shadows — e‑ink is slow and ghosts)
-- **Landscape & portrait** — the layout is orientation-aware and fits both, so you can
-  rotate the Kindle however you like
-- **Soft cue when a session ends** — a gentle chime plus a full‑screen flash + message so
-  you know to take a break, even if the device is silent
-- **Fullscreen** — the status/chrome bar is hidden so the timer fills the screen
+- **Split-flap flip clock** — large white digit cards with a hinge seam across the middle,
+  square-dot colon, and a bold poster wordmark. Tuned for e-ink: no animation, no shadows,
+  no gradients — crisp and ghost-free
+- **50 / 5 by default** — 50-minute focus sessions, 5-minute breaks (adjustable in the UI)
+- **Manual advance** — when a session ends the timer *stops*; the mode label flips to the
+  next session and you press Start when you're ready. No auto-start
+- **Visual end cue** — a full-screen black "poster" flash + message. Deliberately no audio:
+  Kindle WebKit audio is unreliable, so the cue is always visible and never fails
+- **Fullscreen** — the chrome/status bar is hidden; the timer fills the screen
 - **No screensaver / lock** — the screen stays awake while Kpomo-fancy runs
-- No external dependencies: just HTML, CSS and vanilla JavaScript
-- Installs as a Kindle booklet using the same packaging pattern as [KWordle](https://github.com/crizmo/KWordle)
+- **Portrait & landscape** — orientation-aware layout, flip the Kindle however you like
+- **Zero dependencies** — plain HTML, CSS and vanilla JavaScript, written for Kindle's
+  old WebKit (CSS 2.1 layout only, no flexbox)
+- Installs as a Kindle booklet using the same packaging pattern as
+  [KWordle](https://github.com/crizmo/KWordle)
 
-## Design notes (why it's not a "dark" flip clock)
+## Gallery
 
-The reference aesthetic is a dark flip clock (e.g. flocus.com/online-flip-clock). Kindles,
-however, use e‑ink: a dark background and CSS animations are slow and leave ghosting. So the
-redesign keeps the *look* of a flip clock (dark rounded digit tiles with a center seam) but on
-a clean light background, and updates digits **without** animation. This keeps it crisp and fast
-on e‑ink while still reading like a flip clock.
+| Idle | End-of-session cue |
+|---|---|
+| ![Idle](preview/1-idle-portrait.png) | ![Cue](preview/4-cue-overlay.png) |
+
+*(Renders above are at real Kindle Paperwhite 5 resolution: 1236×1648.)*
 
 ## How to Install
 
-**Note:** If you have an older Kindle (5.6.1.1), download the zip with `-legacy` in its name.
+> Requires a jailbroken Kindle. Tested on Paperwhite 5 (FW 5.16.9); should work on any
+> device with the browser-based mesquite runtime (Kobo-free Kindles, FW ≥ 5.x).
 
-1. Download the latest release from this repository (or build it yourself).
-2. Connect your Kindle to your computer via USB.
-3. Copy the entire `kpomo-fancy` folder and `kpomo-fancy.sh` file into the **Documents** folder
-   of your Kindle.
-4. Safely eject your Kindle.
-5. Run `kpomo-fancy.sh` (jailbroken Kindle) — this registers the app, hides the chrome bar,
-   allows both orientations **and** keeps the screen awake.
-6. On the device open the **Kpomo-fancy** booklet to start the timer.
+1. Download the latest `Kpomo-fancy.zip` from the [releases page](../../releases).
+2. Connect your Kindle via USB and copy the unzipped `kpomo-fancy` folder **and**
+   `kpomo-fancy.sh` into the **documents** folder.
+3. Safely eject, open the terminal (e.g. via `;debugOn` → `~bash`), and run:
+   ```
+   sh /mnt/us/documents/kpomo-fancy.sh
+   ```
+4. The app registers and launches. A **Kpomo-fancy** tile (flip-clock icon) now appears
+   in the applications menu.
 
 ## Usage
 
-1. Tap **Start** to begin a work session (default 25 minutes).
-2. When the work timer ends, a **gentle chime** plays and a full‑screen cue appears
-   ("Break time / Time to move"). Tap **Start** to begin the short break.
-3. Use **Pause** to pause the countdown or **Reset** to return to the current session length.
-4. You can adjust durations by editing the values in the center.
-
-## About the sound
-
-Kindles only play Audible natively, and a WebKit `Audio` element is often silent on Kindle, so
-the end‑of‑session cue is **primarily visual** (screen flash + full‑screen message) and always
-reliable. The gentle chime (`sounds/chime.ogg`) plays on devices/WebKit that support audio.
-On a jailbroken Kindle with a speaker, audio can also be routed through the system
-(`aplay /var/local/mesquite/kpomo-fancy/sounds/chime.wav`) if you wire a shell trigger.
+1. Set durations with the **Focus / Break** cards (default 50 / 5 minutes).
+2. Tap **Start** — settings hide and the countdown runs on the flip clock.
+3. When a session ends, the screen flashes and a full-screen message appears
+   (e.g. *BREAK TIME*). The timer stops; tap **Start** again to begin the next
+   session — at your pace, never automatically.
+4. **Pause** freezes the countdown; **Reset** returns to the session length.
 
 ## Fullscreen, orientation & keeping the screen awake
 
-- **Fullscreen**: `kpomo-fancy.sh` and the app both set the chrome bar to `blank`
-  (`configureChrome ... topNavBar:{template:"blank"}`), so the timer fills the screen.
-- **Landscape & portrait**: the installer sets `supportedOrientation` to `URL` (both
-  orientations), and the CSS is orientation-aware (tiles are sized off the smaller screen
-  dimension, with a landscape media query that tightens spacing).
-- **No screensaver/lock**: `kpomo-fancy.sh` runs `lipc-set-prop com.lab126.powerd preventScreenSaver 1`.
-  To restore the screensaver later: `lipc-set-prop com.lab126.powerd preventScreenSaver 0`.
-  (On firmware ≥ 5.14.2 the old `~ds` trick is gone; you can also drop an empty
-  `TESTD_PREVENT_SCREENSAVER` file in the Kindle root.)
+- **Fullscreen**: the app sets the chrome bar to `blank`
+  (`configureChrome ... topNavBar:{template:"blank"}`).
+- **Orientation**: the installer registers both orientations; CSS switches tile sizes via
+  an `@media (orientation: landscape)` rule.
+- **Screensaver**: the app runs `preventScreenSaver 1` while active. To restore it:
+  `lipc-set-prop com.lab126.powerd preventScreenSaver 0`.
+  (On FW ≥ 5.14.2 the old `~ds` trick is gone; an empty `TESTD_PREVENT_SCREENSAVER` file
+  in the Kindle root works too.)
 
 ## Development
 
-The code lives entirely in the `kpomo-fancy` directory. Modify `main.js` for logic,
-`main.css` for styling and `index.html` for structure. The `config.xml` file makes
-Kindle aware of the booklet and configures the chrome bar. The app ID is
-`xyz.kurizu.kpomo-fancy`.
+Everything lives in `kpomo-fancy/`: `main.js` (logic), `main.css` (styling),
+`index.html` (structure), `config.xml` (booklet registration + chrome).
+The technical app ID is `xyz.kurizu.kpomo`. Contributions and feedback welcome —
+open an issue or a PR!
+
+## Why "fancy"?
+
+This is the polished redesign of **KPomo**: bigger bolder digit cards with the classic
+split-flap seam, a poster-style wordmark, a proper progress gauge, a black primary
+button, and a full-screen end-of-session poster. The original minimal `kpomo/` build
+is still in this repo if you prefer the stripped-down look.
