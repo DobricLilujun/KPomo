@@ -20,11 +20,11 @@
 - **Split-flap flip clock** — large white digit cards with a hinge seam across the middle,
   square-dot colon, and a bold poster wordmark. Tuned for e-ink: no animation, no shadows,
   no gradients — crisp and ghost-free
-- **Split-flap page-turn FX (optional)** — digits *physically flip* on the hinge like a real
-  airport board. Built for e-ink: the fall is a **3-frame discrete animation** (step-end, ~240ms)
-  so each flip is just two fast partial refreshes — no smooth-motion blur, minimal ghosting.
-  Only the digit that changed animates. Toggle it in the app (Flip FX), auto-disabled on
-  WebKits without 3D support
+- **Split-flap page-turn FX (optional)** — digits *physically flip* like a real airport board.
+  Built for slow e-ink: the flip is **two JS-timed repaints** (~420ms apart) — new top half +
+  a white "falling card" fold covering the bottom, then the fold lifts to reveal the new
+  digit. CSS animations are invisible on Kindle (the browser skips intermediate frames),
+  explicit repaints are not. Only the digit that changed animates. Toggle in-app (Flip FX)
 - **50 / 5 by default** — 50-minute focus sessions, 5-minute breaks (adjustable in the UI)
 - **Manual advance** — when a session ends the timer *stops*; the mode label flips to the
   next session and you press Start when you're ready. No auto-start
@@ -40,7 +40,7 @@
 
 ## Gallery
 
-The page-turn animation — 4 frames total, e-ink friendly:
+The page-turn animation — two visible repaints, e-ink friendly:
 
 ![Flip FX](preview/flip-fx.gif)
 

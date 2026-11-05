@@ -81,61 +81,21 @@ body {
   border-top: 3px solid #1b1b1b;
 }
 
-/* ---- Split-flap FX (e-ink friendly: 3 static frames, step-end) ----
-   The flap is the top half of the card. Its front shows the OLD digit's top
-   half, its back (pre-rotated 180) the NEW digit's bottom half. When the
-   digit changes, the flap falls about the hinge line. step-end forces only
-   0 / -90 / -180 deg to ever be rendered = two partial refreshes per flip. */
+/* ---- Split-flap FX (e-ink friendly: JS-timed 2-stage repaints) ----
+   .flap is a plain white "folded card face" covering the bottom half of the
+   card while the digit changes above it. No CSS animation, no 3D — the
+   Kindle browser collapses animations to their final frame, but a style
+   change behind setTimeout always repaints. Stage gap: FX_STEP_MS in main.js. */
 .flap {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 50%;
   width: 100%;
   height: 50%;
   display: none;
-  -webkit-transform-origin: 50% 100%;
-  transform-origin: 50% 100%;
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-}
-.flap-face {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   background: #ffffff;
-  color: #000000;
-  font-size: 104px;
-  font-weight: 900;
-  text-align: center;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-.flap-back {
-  -webkit-transform: rotateX(180deg);
-  transform: rotateX(180deg);
-}
-.flap-face .num-copy {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  line-height: 175px;
-}
-.flap-back .num-copy {
-  top: -88px;   /* reveal the bottom half of the digit */
-}
-@-webkit-keyframes flapfall {
-  0%   { -webkit-transform: rotateX(0deg); }
-  50%  { -webkit-transform: rotateX(-90deg); }
-  100% { -webkit-transform: rotateX(-180deg); }
-}
-@keyframes flapfall {
-  0%   { transform: rotateX(0deg); }
-  50%  { transform: rotateX(-90deg); }
-  100% { transform: rotateX(-180deg); }
+  border-top: 3px solid #6b6b6b;
+  border-radius: 0 0 13px 13px;
 }
 
 /* Colon = two SQUARE dots stacked (classic flip-clock separator). */
@@ -297,9 +257,6 @@ body {
   #settings .setting { padding: 8px 16px; }
   #settings .setting-input button { width: 38px; height: 38px; line-height: 38px; font-size: 20px; }
   #settings input[type="number"] { width: 56px; height: 38px; font-size: 18px; }
-  .flap-face { font-size: 72px; }
-  .flap-face .num-copy { line-height: 118px; }
-  .flap-back .num-copy { top: -59px; }
   #cue { padding-top: 22%; }
   #cue-message { font-size: 48px; }
 }

@@ -8,34 +8,16 @@ var remaining = 0;       // seconds left in current session
 var sessionTotal = 0;    // full length of current session
 var inBreak = false;     // false = work, true = break
 var tiles = [];         // the four digit elements, cached at build time
-var flaps = [];         // split-flap FX elements, parallel to tiles
+var flaps = [];         // fold-cover elements, parallel to tiles
 var fxOn = true;        // user toggle (Flip FX checkbox)
-var flipSupport = false;// 3D + animation capability, detected at load
 var fxReady = false;    // no flipping during the very first paint
-
-// Detect what this Kindle's WebKit can do. If anything is missing we fall
-// back to a plain digit swap (the old behaviour) — never broken graphics.
-function detectFlip() {
-  var s = document.createElement('div').style;
-  flipSupport = (('webkitAnimation' in s) || ('animation' in s)) &&
-                ('webkitTransform' in s) &&
-                ('webkitBackfaceVisibility' in s);
-}
+var FX_STEP_MS = 420;   // pause between the two e-ink updates
 
 // Build the flip-clock tiles once: MM : SS  (4 tiles + 1 colon).
 function buildClock() {
   var clock = document.getElementById('clock');
   if (!clock || clock.childNodes.length > 0) return;
 
-  function half(cls, txt) {
-    var h = document.createElement('div');
-    h.className = cls;
-    var n = document.createElement('div');
-    n.className = 'num-copy';
-    n.textContent = txt;
-    h.appendChild(n);
-    return h;
-  }
   function tile() {
     var d = document.createElement('div');
     d.className = 'tile';
@@ -46,17 +28,14 @@ function buildClock() {
     var hinge = document.createElement('div'); // the split-flap hinge line
     hinge.className = 'hinge';
     d.appendChild(hinge);
-    // The falling flap: front = old digit top half, back = new digit bottom
-    // half. Hidden until a flip runs; e-ink sees only 3 static frames.
+    // The fold cover: a plain white "falling card face" that hides the bottom
+    // half during stage 1 of the flip. No 3D, no CSS animation — JS timed
+    // style changes, so every stage is a real repaint the e-ink shows.
     var flap = document.createElement('div');
     flap.className = 'flap';
-    var front = half('flap-face flap-front', '0');
-    var back = half('flap-face flap-back', '0');
-    flap.appendChild(front);
-    flap.appendChild(back);
     d.appendChild(flap);
     clock.appendChild(d);
-    flaps.push({ root: flap, front: front.firstChild, back: back.firstChild });
+    flaps.push({ root: flap });
     return num;                                 // updateDisplay writes to tile-num
   }
   function colon() {
@@ -101,34 +80,26 @@ function updateDisplay() {
 }
 
 // Write a digit into tile i. Only tiles whose digit CHANGED animate, and
-// only when the FX is on + supported; everything else is a plain swap.
+// only when the FX is on; everything else is a plain swap.
 function setDigit(i, v) {
   var t = tiles[i];
   if (String(t.textContent) === String(v)) return;
-  if (fxReady && fxOn && flipSupport) flipCard(i, String(t.textContent), String(v));
-  t.textContent = v;   // base card shows the NEW digit immediately; the flap
-                       // (front = old top half) still covers the top until it falls
+  if (fxReady && fxOn) flipCard(i, v);
+  else t.textContent = v;
 }
 
-// E-ink-friendly split-flap: exactly 3 rendered frames via step-end timing —
-// 0deg (flap over old top, no visual change), -90deg (edge = one partial
-// refresh), -180deg (flap landed showing new bottom half = one more).
-function flipCard(i, oldDigit, newDigit) {
+// E-ink friendly split-flap, driven by two JS-timed repaints (CSS animations
+// get collapsed to their final frame by the Kindle browser — this cannot be):
+// stage 1: top half of the card shows the NEW digit, the bottom half is
+//          covered by a white fold (looks like the card mid-fall);
+// stage 2 (FX_STEP_MS later): fold removed, new bottom revealed.
+function flipCard(i, v) {
   var f = flaps[i];
-  f.front.textContent = oldDigit;
-  f.back.textContent = newDigit;
+  tiles[i].textContent = v;       // stage 1 paint: new top, fold hides bottom
   f.root.style.display = 'block';
-  // restart the CSS animation (remove -> reflow -> re-add)
-  f.root.style.webkitAnimation = 'none';
-  f.root.style.animation = 'none';
-  void f.root.offsetWidth;
-  f.root.style.webkitAnimation = 'flapfall .24s step-end forwards';
-  f.root.style.animation = 'flapfall .24s step-end forwards';
   setTimeout(function () {
-    f.root.style.display = 'none';
-    f.root.style.webkitAnimation = 'none';
-    f.root.style.animation = 'none';
-  }, 260);
+    f.root.style.display = 'none'; // stage 2 paint: full new digit
+  }, FX_STEP_MS);
 }
 
 function toggleFlipFx() {
@@ -137,7 +108,6 @@ function toggleFlipFx() {
 }
 
 function onPageLoad() {
-  detectFlip();
   buildClock();
   updateDisplay();
   fxReady = true;   // first paint is static; flips start afterwards
