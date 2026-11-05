@@ -10,9 +10,9 @@
 > **If you find Kpomo-fancy useful, please give it a ⭐ star!**
 > Stars help other Kindle tinkerers discover this project — and they're free.
 > Bookmark the repo, share it in the [KindleModding Discord](https://discord.kindlemodding.org),
-> or [buy me a coffee](https://ko-fi.com/kurizu) if it made you more productive. Thanks! 🙏
+> or [buy me a coffee](https://ko-fi.com/lujunli) if it made you more productive. Thanks! 🙏
 
-<a href="https://ko-fi.com/kurizu" target="_blank">
+<a href="https://ko-fi.com/lujunli" target="_blank">
   <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" />
 </a>
 
