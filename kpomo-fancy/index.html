@@ -6,8 +6,8 @@
   <meta charset="utf-8">
   <script src="js/polyfill.min.js"></script>
   <script src="js/sdk.js"></script>
-  <script src="main.js?v=6"></script>
-  <link href="main.css?v=6" rel="stylesheet">
+  <script src="main.js?v=7"></script>
+  <link href="main.css?v=7" rel="stylesheet">
   <title>Kpomo-fancy</title>
 
   <!-- Fullscreen: hide the chrome/status bar. "blank" template removes the bar. -->
@@ -77,6 +77,12 @@
           <button onclick="changeDuration('break', -1)">&minus;</button>
           <input type="number" id="break-duration" value="5" min="1" />
           <button onclick="changeDuration('break', 1)">+</button>
+        </div>
+      </div>
+      <div class="setting">
+        <div class="setting-label">Flip FX</div>
+        <div class="setting-input">
+          <input type="checkbox" id="flip-fx" checked="checked" onclick="toggleFlipFx()" />
         </div>
       </div>
     </div>

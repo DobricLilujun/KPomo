@@ -3,8 +3,7 @@
 **A split-flap flip-clock Pomodoro timer for Kindle.**
 
 <p align="center">
-  <img src="preview/2-running-portrait.png" width="300" alt="Kpomo-fancy running (portrait)" />
-  <img src="preview/3-running-landscape.png" width="420" alt="Kpomo-fancy running (landscape)" />
+  <img src="preview/hero.png" width="860" alt="Kpomo-fancy — split-flap flip clock on Kindle Paperwhite 5" />
 </p>
 
 > **If you find Kpomo-fancy useful, please give it a ⭐ star!**
@@ -21,6 +20,11 @@
 - **Split-flap flip clock** — large white digit cards with a hinge seam across the middle,
   square-dot colon, and a bold poster wordmark. Tuned for e-ink: no animation, no shadows,
   no gradients — crisp and ghost-free
+- **Split-flap page-turn FX (optional)** — digits *physically flip* on the hinge like a real
+  airport board. Built for e-ink: the fall is a **3-frame discrete animation** (step-end, ~240ms)
+  so each flip is just two fast partial refreshes — no smooth-motion blur, minimal ghosting.
+  Only the digit that changed animates. Toggle it in the app (Flip FX), auto-disabled on
+  WebKits without 3D support
 - **50 / 5 by default** — 50-minute focus sessions, 5-minute breaks (adjustable in the UI)
 - **Manual advance** — when a session ends the timer *stops*; the mode label flips to the
   next session and you press Start when you're ready. No auto-start
@@ -35,6 +39,10 @@
   [KWordle](https://github.com/crizmo/KWordle)
 
 ## Gallery
+
+The page-turn animation — 4 frames total, e-ink friendly:
+
+![Flip FX](preview/flip-fx.gif)
 
 | Idle | End-of-session cue |
 |---|---|
@@ -59,7 +67,8 @@
 
 ## Usage
 
-1. Set durations with the **Focus / Break** cards (default 50 / 5 minutes).
+1. Set durations with the **Focus / Break** cards (default 50 / 5 minutes), and switch
+   **Flip FX** on/off to taste.
 2. Tap **Start** — settings hide and the countdown runs on the flip clock.
 3. When a session ends, the screen flashes and a full-screen message appears
    (e.g. *BREAK TIME*). The timer stops; tap **Start** again to begin the next
